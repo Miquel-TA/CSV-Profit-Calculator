@@ -1,7 +1,6 @@
 # Profit Calculator by Miquel Trujillo
 
-This is a C# code that calculates profit over time based on user-defined parameters and data from a CSV file.
-This code uses .NET Framework 4.8.
+This .NET Framework 4.8 C# code will calculate stock balance progression over time based on user-defined parameters and data from a CSV file.
 This code has been made for learning purposes at Vueling University.
 This project uses MVC system. Different classses are separated into their respective folders depending on their usage.
 
