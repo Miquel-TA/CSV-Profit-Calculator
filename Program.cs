@@ -24,14 +24,9 @@ namespace ProfitCalculator
 
         static void Main(string[] args)
         {
-            Stopwatch stopwatch = Stopwatch.StartNew();
-
             Program program = new Program();
             program.Run();
-
-            stopwatch.Stop();
-            long elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
-            Console.WriteLine("Execution Time: " + elapsedMilliseconds + " ms");
+            Console.ReadLine();
         }
 
         public void Run()
@@ -39,6 +34,8 @@ namespace ProfitCalculator
             try
             {
                 GetUserParameters();
+
+                Stopwatch stopwatch = Stopwatch.StartNew();
 
                 CsvDataManager csvDataManager = new CsvDataManager(csvFilePath, csvDateColumnColumnIndex, csvOpeningPriceColumnIndex, csvClosingPriceColumnIndex, csvValueSeparator, csvCultureInfo);
                 List<DataPoint> dataPoints = csvDataManager.GetDataPointsFromCsv();
@@ -49,7 +46,11 @@ namespace ProfitCalculator
                 string outputFilePath = csvFilePath + "-output- " + DateTime.Now.ToString("dd-MM-yyyy HH.mm.ss") + ".txt";
                 File.WriteAllLines(outputFilePath, outputLogs, Encoding.UTF8);
 
-                Console.WriteLine(outputFilePath);
+                Console.WriteLine("Output file: " + outputFilePath);
+
+                stopwatch.Stop();
+                long elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+                Console.WriteLine("Execution Time: " + elapsedMilliseconds + " ms");
             }
             catch (Exception ex)
             {
