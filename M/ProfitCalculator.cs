@@ -34,7 +34,6 @@ namespace ProfitCalculator
 
             while (depositDate < analyseUntilDate)
             {
-
                 DateTime depositDateWithDelay = depositDate.AddDays(depositDayDelay);
 
                 closestDataPointToDepositDate = FindClosestDataPoint(depositDateWithDelay);
@@ -66,7 +65,6 @@ namespace ProfitCalculator
                         $"  Your total investment is {totalDeposited}."
                     );
                 }
-
                 depositDate = new DateTime(depositDate.Year, depositDate.Month, 1).AddMonths(1);
                 depositDate = GetDepositDate(depositDate);
             }
@@ -88,7 +86,6 @@ namespace ProfitCalculator
 
         private DateTime GetDepositDate(DateTime datePointer)
         {
-
             int newPointerYear = datePointer.Year;
             int newPointerMonth = datePointer.Month;
 
@@ -102,7 +99,6 @@ namespace ProfitCalculator
             {
                 datePointer = datePointer.AddDays(-1);
             }
-
             return datePointer;
         }
 

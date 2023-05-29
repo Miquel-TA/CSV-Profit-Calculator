@@ -7,6 +7,5 @@ namespace ProfitCalculator
         public DateTime date { get; set; }
         public double openingPrice { get; set; }
         public double closingPrice { get; set; }
-
     }
 }

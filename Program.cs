@@ -61,5 +61,6 @@ namespace ProfitCalculator
             csvCultureInfo = InputManager.Ask<CultureInfo>("Type the ISO code of the CSV (es-US).");
             csvValueSeparator = InputManager.Ask<char>("Type the character used for separating values (;).");
         }
+
     }
 }
