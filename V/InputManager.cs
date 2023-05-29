@@ -11,7 +11,6 @@ namespace ProfitCalculator
             T result;
             string input;
             bool isValid;
-
             do
             {
                 Console.WriteLine(prompt);
@@ -33,13 +32,11 @@ namespace ProfitCalculator
                         }
                     }
                 }
-
-                if (!isValid)
+                else
                 {
                     Console.Clear();
                     Console.WriteLine("Something's wrong! Check it and try again.");
                 }
-
             } while (!isValid);
 
             Console.Clear();

@@ -60,22 +60,8 @@ namespace ProfitCalculator
             public StockDataMap(int csvDateColumnColumnIndex, int csvOpeningPriceColumnIndex, int csvClosingPriceColumnIndex)
             {
                 Map(m => m.date).Index(csvDateColumnColumnIndex);
-                Map(m => m.openingPrice).Index(csvOpeningPriceColumnIndex).TypeConverter<CustomDoubleConverter>();
-                Map(m => m.closingPrice).Index(csvClosingPriceColumnIndex).TypeConverter<CustomDoubleConverter>();
-            }
-        }
-
-        public class CustomDoubleConverter : DefaultTypeConverter
-        {
-            public override object ConvertFromString(string text, IReaderRow row, MemberMapData memberMapData)
-            {
-                if (text.Contains(",") || text.Contains(".") && double.Parse(text) < 1000)
-                {
-                    return double.Parse(text);
-                } else
-                {
-                    return double.Parse(text) / 1000;
-                }
+                Map(m => m.openingPrice).Index(csvOpeningPriceColumnIndex);
+                Map(m => m.closingPrice).Index(csvClosingPriceColumnIndex);
             }
         }
 

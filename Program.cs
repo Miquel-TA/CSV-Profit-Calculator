@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text;
 
 namespace ProfitCalculator
 {
-    internal class Program
+    public class Program
     {
         private string csvFilePath;
         private DateTime analyseSinceDate;
@@ -23,11 +24,17 @@ namespace ProfitCalculator
 
         static void Main(string[] args)
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
             Program program = new Program();
             program.Run();
+
+            stopwatch.Stop();
+            long elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+            Console.WriteLine("Execution Time: " + elapsedMilliseconds + " ms");
         }
 
-        private void Run()
+        public void Run()
         {
             try
             {
@@ -64,8 +71,8 @@ namespace ProfitCalculator
             depositDayDelay = InputManager.Ask<int>("Type the advance or delay for the deposit relative to your paycheck day. Can be zero. (+1).");
 
             csvDateColumnColumnIndex = InputManager.Ask<int>("Type the index number of the date column for the Csv file (1).") - 1;
-            csvOpeningPriceColumnIndex = InputManager.Ask<int>("Type the index number of the opening column for the Csv file (2).") - 1;
-            csvClosingPriceColumnIndex = InputManager.Ask<int>("Type the index number of the closing column for the Csv file (3).") - 1;
+            csvClosingPriceColumnIndex = InputManager.Ask<int>("Type the index number of the closing column for the Csv file (2).") - 1;
+            csvOpeningPriceColumnIndex = InputManager.Ask<int>("Type the index number of the opening column for the Csv file (3).") - 1;
             csvCultureInfo = InputManager.Ask<CultureInfo>("Type the ISO code of the CSV (es-US).");
             csvValueSeparator = InputManager.Ask<char>("Type the character used for separating values (;).");
         }
