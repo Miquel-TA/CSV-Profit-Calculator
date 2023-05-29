@@ -1,5 +1,6 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
+using CsvHelper.TypeConversion;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -44,7 +45,6 @@ namespace ProfitCalculator
             using (var csvStreamReader = new StreamReader(csvFilePath))
             using (var csvHelperReader = new CsvReader(csvStreamReader, config))
             {
-                // Context: We use the Data-Column relationship along with custom mapping to find the correct columns for each value.
                 StockDataMap customDataMapping = new StockDataMap(csvDateColumnColumnIndex, csvOpeningPriceColumnIndex, csvClosingPriceColumnIndex);
                 csvHelperReader.Context.RegisterClassMap(customDataMapping);
 
@@ -60,8 +60,22 @@ namespace ProfitCalculator
             public StockDataMap(int csvDateColumnColumnIndex, int csvOpeningPriceColumnIndex, int csvClosingPriceColumnIndex)
             {
                 Map(m => m.date).Index(csvDateColumnColumnIndex);
-                Map(m => m.openingPrice).Index(csvOpeningPriceColumnIndex);
-                Map(m => m.closingPrice).Index(csvClosingPriceColumnIndex);
+                Map(m => m.openingPrice).Index(csvOpeningPriceColumnIndex).TypeConverter<CustomDoubleConverter>();
+                Map(m => m.closingPrice).Index(csvClosingPriceColumnIndex).TypeConverter<CustomDoubleConverter>();
+            }
+        }
+
+        public class CustomDoubleConverter : DefaultTypeConverter
+        {
+            public override object ConvertFromString(string text, IReaderRow row, MemberMapData memberMapData)
+            {
+                if (text.Contains(",") || text.Contains(".") && double.Parse(text) < 1000)
+                {
+                    return double.Parse(text);
+                } else
+                {
+                    return double.Parse(text) / 1000;
+                }
             }
         }
 
