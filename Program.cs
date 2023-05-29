@@ -29,18 +29,28 @@ namespace ProfitCalculator
 
         private void Run()
         {
-            GetUserParameters();
+            try
+            {
 
-            CsvDataManager csvDataManager = new CsvDataManager(csvFilePath, csvDateColumnColumnIndex, csvOpeningPriceColumnIndex, csvClosingPriceColumnIndex, csvValueSeparator, csvCultureInfo);
-            List<DataPoint> dataPoints = csvDataManager.GetDataPointsFromCsv();
+                GetUserParameters();
 
-            ProfitCalculator profitCalculator = new ProfitCalculator(dataPoints, analyseSinceDate, analyseUntilDate, depositQuantity, depositDay, depositDayDelay);
-            List<string> outputLogs = profitCalculator.CalculateProfitOverTime();
+                CsvDataManager csvDataManager = new CsvDataManager(csvFilePath, csvDateColumnColumnIndex, csvOpeningPriceColumnIndex, csvClosingPriceColumnIndex, csvValueSeparator, csvCultureInfo);
+                List<DataPoint> dataPoints = csvDataManager.GetDataPointsFromCsv();
 
-            string outputFilePath = csvFilePath + "-output- " + DateTime.Now.ToString("dd-MM-yyyy HH.mm.ss") + ".txt";
-            File.WriteAllLines(outputFilePath, outputLogs, Encoding.UTF8);
+                ProfitCalculator profitCalculator = new ProfitCalculator(dataPoints, analyseSinceDate, analyseUntilDate, depositQuantity, depositDay, depositDayDelay);
+                List<string> outputLogs = profitCalculator.CalculateProfitOverTime();
 
-            Console.WriteLine(outputFilePath);
+                string outputFilePath = csvFilePath + "-output- " + DateTime.Now.ToString("dd-MM-yyyy HH.mm.ss") + ".txt";
+                File.WriteAllLines(outputFilePath, outputLogs, Encoding.UTF8);
+
+                Console.WriteLine(outputFilePath);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private void GetUserParameters()
