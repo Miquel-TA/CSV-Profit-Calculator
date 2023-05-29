@@ -6,79 +6,80 @@ namespace ProfitCalculator
 {
     public class ProfitCalculator
     {
-        private DateTime analyseUntilDate;
-        private double depositQuantity;
-        private DayOfWeek depositDay;
-        private int depositDayDelay;
+        private DateTime sellStocksDate;
+        private double buyStocksBudget;
+        private DayOfWeek buyStocksDay;
+        private int buyStocksDayDelay;
         private List<DataPoint> dataPoints;
-        private DateTime depositDate;
-        private DataPoint closestDataPointToDepositDate;
-        private double currentStockValue;
+        private DateTime buyStocksDate;
+        private DataPoint dataPoint;
         private double stockCount = 0;
         private double totalDeposited = 0;
 
-        public ProfitCalculator(List<DataPoint> dataPoints, DateTime analyseSinceDate, DateTime analyseUntilDate, double depositQuantity, DayOfWeek depositDay, int depositDayDelay)
+        public ProfitCalculator(List<DataPoint> dataPoints, DateTime buyStocksDate, DateTime sellStocksDate, double buyStocksBudget, DayOfWeek buyStocksDay, int buyStocksDayDelay)
         {
-            this.analyseUntilDate = analyseUntilDate;
-            this.depositQuantity = depositQuantity;
-            this.depositDay = depositDay;
             this.dataPoints = dataPoints;
-            this.depositDayDelay = depositDayDelay;
+            this.sellStocksDate = sellStocksDate;
+            this.buyStocksBudget = buyStocksBudget;
+            this.buyStocksDay = buyStocksDay;
+            this.buyStocksDayDelay = buyStocksDayDelay;
 
-            depositDate = GetDepositDate(analyseSinceDate);
+            buyStocksDate = GetDepositDate(buyStocksDate);
         }
 
         public List<string> CalculateProfitOverTime()
         {
             List<string> outputLogs = new List<string>();
 
-            while (depositDate < analyseUntilDate)
+            while (buyStocksDate < sellStocksDate)
             {
-                DateTime depositDateWithDelay = depositDate.AddDays(depositDayDelay);
+                DateTime buyStocksDateWithDelay = buyStocksDate.AddDays(buyStocksDayDelay);
 
-                closestDataPointToDepositDate = FindClosestDataPoint(depositDateWithDelay);
+                dataPoint = FindClosestDataPoint(buyStocksDateWithDelay);
 
-                currentStockValue = closestDataPointToDepositDate.openingPrice;
-                double stocksToBuy = Round(depositQuantity / currentStockValue);
+                double stocksToBuy = Round(buyStocksBudget / dataPoint.openingPrice);
                 stockCount = stockCount + stocksToBuy;
-                totalDeposited = totalDeposited + depositQuantity;
+                totalDeposited = totalDeposited + buyStocksBudget;
 
-                if (!depositDateWithDelay.Equals(closestDataPointToDepositDate.date))
+                if (!buyStocksDateWithDelay.Equals(dataPoint.date))
                 {
                     outputLogs.Add(
-                        $"{closestDataPointToDepositDate.date:yyyy-MM-dd}:\n" +
-                        $"  The day {depositDateWithDelay:yyyy-MM-dd} ({depositDay}) was not available for deposits.\n" +
-                        $"  The deposit was made on {closestDataPointToDepositDate.date} ({closestDataPointToDepositDate.date.ToString("dddd")}) instead.\n" +
-                        $"  Your balance is {stockCount * currentStockValue}.\n" +
+                        $"{dataPoint.date:dd-MMM-yyyy}:\n" +
+                        $"  The day {buyStocksDateWithDelay:dd-MMM-yyyy} ({buyStocksDay}) was not available for deposits.\n" +
+                        $"  The deposit was made on {dataPoint.date} ({dataPoint.date.ToString("dddd")}) instead.\n" +
+                        $"  Your balance is {(stockCount * dataPoint.openingPrice):0.###}.\n" +
                         $"  Your stock count is {stockCount}.\n" +
-                        $"  Today's stock value is {currentStockValue}.\n" +
+                        $"  Today's opening stock value is {dataPoint.openingPrice}.\n" +
+                        $"  Today's closing stock value is {dataPoint.closingPrice}.\n" +
                         $"  Your total investment is {totalDeposited}."
                     );
                 } 
                 else
                 {
                     outputLogs.Add(
-                        $"{closestDataPointToDepositDate.date:yyyy-MM-dd}:\n" +
-                        $"  Your balance is {stockCount * currentStockValue}.\n" +
+                        $"{dataPoint.date:dd-MMM-yyyy}:\n" +
+                        $"  Your balance is {(stockCount * dataPoint.openingPrice):0.###}.\n" +
                         $"  Your stock count is {stockCount}.\n" +
-                        $"  Today's stock value is {currentStockValue}.\n" +
+                        $"  Today's opening stock value is {dataPoint.openingPrice}.\n" +
+                        $"  Today's closing stock value is {dataPoint.closingPrice}.\n" +
                         $"  Your total investment is {totalDeposited}."
                     );
                 }
-                depositDate = new DateTime(depositDate.Year, depositDate.Month, 1).AddMonths(1);
-                depositDate = GetDepositDate(depositDate);
+                buyStocksDate = new DateTime(buyStocksDate.Year, buyStocksDate.Month, 1).AddMonths(1);
+                buyStocksDate = GetDepositDate(buyStocksDate);
             }
 
-            closestDataPointToDepositDate = FindClosestDataPoint(analyseUntilDate);
-            currentStockValue = closestDataPointToDepositDate.closingPrice;
+            dataPoint = FindClosestDataPoint(sellStocksDate);
 
             outputLogs.Add(
-                $"===================================================\n" + 
-                $"{closestDataPointToDepositDate.date:yyyy-MM-dd}:\n"+
-                $"  Your final balance is {stockCount * currentStockValue}.\n" +
-                $"  Your stock count is {stockCount}.\n" +
-                $"  Today's stock value is {currentStockValue}.\n" +
+                $"===================================================\n" +
+                $"{dataPoint.date:dd-MMM-yyyy}:\n" +
+                $"  Your final balance is {(stockCount * dataPoint.closingPrice):0.###}.\n" +
+                $"  Your final stock count is {stockCount}.\n" +
+                $"  Today's opening stock value is {dataPoint.openingPrice}.\n" +
+                $"  Today's closing stock value is {dataPoint.closingPrice}.\n" +
                 $"  Your total investment is {totalDeposited}.\n" +
+                $"  You made {(stockCount * dataPoint.closingPrice) - totalDeposited} in profit. \n" +
                 $"\nANALYSIS COMPLETED."
             );
             return outputLogs;
@@ -95,7 +96,7 @@ namespace ProfitCalculator
                 DateTime.DaysInMonth(newPointerYear, newPointerMonth)
                 );
 
-            while (datePointer.DayOfWeek != depositDay)
+            while (datePointer.DayOfWeek != buyStocksDay)
             {
                 datePointer = datePointer.AddDays(-1);
             }
