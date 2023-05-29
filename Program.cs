@@ -31,7 +31,6 @@ namespace ProfitCalculator
         {
             try
             {
-
                 GetUserParameters();
 
                 CsvDataManager csvDataManager = new CsvDataManager(csvFilePath, csvDateColumnColumnIndex, csvOpeningPriceColumnIndex, csvClosingPriceColumnIndex, csvValueSeparator, csvCultureInfo);
@@ -44,7 +43,6 @@ namespace ProfitCalculator
                 File.WriteAllLines(outputFilePath, outputLogs, Encoding.UTF8);
 
                 Console.WriteLine(outputFilePath);
-
             }
             catch (Exception ex)
             {
