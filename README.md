@@ -8,7 +8,7 @@ This project uses MVC system. Different classses are separated into their respec
 
 1. Compile and run the program using a C# compiler.
 2. The program will prompt you to enter various required parameters for reading, interactacting and displaying data.
-3. Provide the required inputs as requested by the program.
+3. Provide the required inputs as requested by the program, the parameters will be saved to disk for next executions.
 4. Once all the parameters are provided, the program will read the data from the CSV file and perform the profit calculation.
 5. The calculated results will be saved to an output text file with a timestamp.
 6. The file path of the output text file will be displayed on the console.
@@ -17,11 +17,12 @@ This project uses MVC system. Different classses are separated into their respec
 
 The program consists of several classes:
 
-- `Program`: The main class that contains the entry point of the program. It interacts with the user, reads the CSV data, and performs the profit calculation.
-- `ProfitCalculator`: This class performs the profit calculation based on the provided parameters and the data from the CSV file.
-- `InputManager`: This class handles user input and validation.
-- `DataPoint`: Represents a data point containing the date, opening price, and closing price.
+- `Program`: The main class that contains the entry point of the program. It interacts with the user, stores all needed values and calls next classes.
+- `InputManager`: This class handles user input and validation for the Main class.
 - `CsvDataManager`: Responsible for reading the CSV file and extracting the necessary data points.
+- `ProfitCalculator`: This class performs the profit calculation based on the provided parameters and the data from the CSV file.
+- `DataPoint`: Represents a data point containing the date, opening price, and closing price.
+- `Parameters`: Holds most parameters used for customizing the readings, interpretations and calculations. It's a serializable class.
 
 # Dependencies
 
@@ -35,7 +36,7 @@ The program relies on the following external libraries:
   - `System.LinQ`: Provides query-like interaction with objects.
 - `CsvHelper`: A library for reading and writing CSV files efficiently.
 
-# Detailed Class Functionality
+# Detailed Class Functionality ( OUTDATED )
 
 The `Program` class serves as the entry point of the program. Its main responsibilities include:
 
