@@ -97,9 +97,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controller\CsvDataManager.cs" />
-    <Compile Include="Model\DataPoint.cs" />
-    <Compile Include="Model\ProfitCalculator.cs" />
+    <Compile Include="Model\CsvDataManager.cs" />
+    <Compile Include="Controller\DataPoint.cs" />
+    <Compile Include="Controller\ProfitCalculator.cs" />
     <Compile Include="View\InputManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
