@@ -4,51 +4,57 @@ using System.IO;
 
 namespace ProfitCalculator
 {
-    public static class InputManager
+    public class InputManager
     {
-        public static T Ask<T>(string prompt, bool mustCheckPath = false)
+        public T AskUser<T>(string prompt, bool mustCheckFilePath = false)
         {
             T result;
-            string input;
+            string userInput;
             bool isValid;
+
             do
             {
                 Console.WriteLine(prompt);
-                input = Console.ReadLine();
-                isValid = TryParseParameter<T>(input, out result);
+                userInput = Console.ReadLine();
+                Console.Clear();
 
-                if (isValid)
-                {
-                    if (result.Equals(default(T)))
-                    {
-                        isValid = false;
-                    }
+                isValid = CheckInput<T>(userInput, mustCheckFilePath, out result);
 
-                    if (mustCheckPath)
-                    {
-                        if (!File.Exists(input) || !input.ToLower().EndsWith(".csv"))
-                        {
-                            isValid = false;
-                        }
-                    }
-                }
-                else
+                if (!isValid)
                 {
-                    Console.Clear();
                     Console.WriteLine("Something's wrong! Check it and try again.");
                 }
+
             } while (!isValid);
 
-            Console.Clear();
             return result;
         }
 
-        private static bool TryParseParameter<T>(string input, out T result)
+        public bool CheckInput<T>(string userInput, bool mustCheckFilePath, out T result)
+        {
+            bool isValid = TryParseParameter<T>(userInput, out result);
+
+            if (result.Equals(default(T)) && isValid)
+            {
+                isValid = false;
+            }
+
+            if (mustCheckFilePath && isValid)
+            {
+                if (!File.Exists(userInput) || !userInput.ToLower().EndsWith(".csv"))
+                {
+                    isValid = false;
+                }
+            }
+            return isValid;
+        }
+
+        private bool TryParseParameter<T>(string userInput, out T result)
         {
             try
             {
                 TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
-                result = (T)converter.ConvertFromString(input);
+                result = (T)converter.ConvertFromString(userInput);
                 return true;
             }
             catch

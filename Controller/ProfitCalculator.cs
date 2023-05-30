@@ -23,8 +23,7 @@ namespace ProfitCalculator
             this.buyStocksBudget = buyStocksBudget;
             this.buyStocksDay = buyStocksDay;
             this.buyStocksDayDelay = buyStocksDayDelay;
-
-            buyStocksDate = GetDepositDate(buyStocksDate);
+            this.buyStocksDate = GetDepositDate(buyStocksDate);
         }
 
         public List<string> CalculateProfitOverTime()
